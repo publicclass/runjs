@@ -92,6 +92,14 @@
     $.run("/Users/slaskis/Desktop/Ideas/runjs/test/test-run.html",function(){
       console.log("Testing offline!")
     })
+    assert($.run._routes.length,7)
+    
+    $.run(function(){
+      console.log("Every time!")
+    })
+    assert($.run._routes[7].route,"/?*")
+    assert($.run._routes[7].pathname instanceof RegExp)
+    assert($.run._routes.length,8)
     
     window.addEventListener("hashchange",function(){
       $.run()
