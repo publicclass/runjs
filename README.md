@@ -94,6 +94,19 @@ A little method which "runs" depending on either the current page (yay, organize
           $.run("/*all/slideshow")
         })
 
+## History
+
+### 0.1.1
+
+* Added the catch-all style.
+
+        $.run(function(){
+          // I'll be called every time!
+        })
+
+### 0.1.0
+
+* Initial version.
 
 ## TODO
 
