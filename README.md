@@ -86,7 +86,7 @@ A little method which "runs" depending on either the current page (yay, organize
 
 * Run the script again (in case anything has updated)
 
-        window.addEventListener("onhashchange",function(){
+        window.addEventListener("hashchange",function(){
           // Run all (currently matching) routes again
           $.run()
           
