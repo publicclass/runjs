@@ -1,0 +1,102 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+  <meta charset="utf-8"> 
+  <title>RunJS test</title> 
+</head> 
+ 
+<body> 
+  
+  <a href="#!/hello/world">Hello World</a>
+  <a href="#!/page/123">Page 123</a>
+  <a href="#!/page/123/slideshow">Page 123 Slideshow</a>
+  <a href="#!/page/123/slideshow/123">Page 123 Slideshow 123</a>
+  
+  <script src="http://code.jquery.com/jquery-1.6.min.js"></script> 
+  <script src="../lib/run.js"></script>
+  <script>
+    // Simple assertion function
+    // if only 1 argument it just checks that it's true-ish
+    // if 2 arguments it checks if they match
+    // if 3 arguments and the last one is `true` do a deep equal
+    function assert(val){
+      if( arguments.length == 1 && !val )
+        throw new Error("AssertError: "+val);
+      if( arguments.length == 2 && val !== arguments[1] )
+        throw new Error("AssertError: "+val+" does not equal "+arguments[1]);
+    }
+
+    var found;
+
+    $.run("/hello/world",function(url){
+      assert(url,"/hello/world")
+      console.log(url)
+    })
+    assert($.run._routes.length,1)
+    assert($.run._routes[0].route,"/hello/world")
+    assert($.run._routes[0].pathname instanceof RegExp)
+    assert($.run._routes[0].pathname.source,/^\/hello\/world\/?$/.source)
+
+    $.run("/page/:id",function(id,url){
+      assert(id,"123")
+      assert(url,"/page/123")
+      console.log(url)
+    })
+    assert($.run._routes.length,2)
+    assert($.run._routes[1].route,"/page/:id")
+    assert($.run._routes[1].pathname instanceof RegExp)
+    assert($.run._routes[1].pathname.source,/^\/page\/([^\/]+)\/?$/.source)
+    
+    $.run("/*all/slideshow",function(all,url){
+      assert(all,"page/123")
+      assert(url,"/page/123/slideshow")
+      console.log(url)
+    })
+    assert($.run._routes.length,3)
+    assert($.run._routes[2].route,"/*all/slideshow")
+    assert($.run._routes[2].pathname instanceof RegExp)
+    assert($.run._routes[2].pathname.source,/^\/(.+)\/slideshow\/?$/.source)
+    
+    $.run("/*all/slideshow(/:id)",function(all,id,url){
+      assert(all,"page/123")
+      if( id ) {
+        assert(id,"123")
+        assert(url,"/page/123/slideshow/123")
+      } else {
+        assert(id,undefined)
+        assert(url,"/page/123/slideshow")
+      }
+      console.log(url)
+    })
+    assert($.run._routes.length,4)
+    assert($.run._routes[3].route,"/*all/slideshow(/:id)")
+    assert($.run._routes[3].pathname instanceof RegExp)
+    assert($.run._routes[3].pathname.source,/^\/(.+)\/slideshow(?:\/([^\/]+))?\/?$/.source)
+
+    $.run({
+      "body": function(){
+        assert(this.length==1)
+        console.log("Found a body!")
+      },
+      "script": function(){
+        assert(this.length==3)
+        console.log("Found some scripts!")
+      }
+    })
+    assert($.run._routes.length,6)
+    
+
+    $.run({})
+    assert($.run._routes.length,6)
+    
+    $.run("/Users/slaskis/Desktop/Ideas/runjs/test/test-run.html",function(){
+      console.log("Testing offline!")
+    })
+    
+    window.addEventListener("hashchange",function(){
+      $.run()
+    })
+    
+  </script>
+</body> 
+</html>
