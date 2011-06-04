@@ -3,6 +3,46 @@
 A simple lightweight library to run the appropriate scripts depending on a pathname or selector.
 
 
+## Background
+
+We, at [Public Class](http://publicclass.se), try to organize our client side javascript in jQuery plugins as much as possible, but even the nicely encapsulated jQuery plugins need to be initialized somewhere, usually in a "document ready"-method.
+
+And we felt a need to organize our initializeres depending on which page we're at to avoid our "document ready"-method to look like this:
+
+    $(function(){
+      if( $(".drag-drop").length ){
+        // jQuery UI sorting 
+        $(".drag-drop").sortable({
+          // plenty of configuration
+        })
+        // (and somewhere else we'll need to re-init this to update the sortable when the lists have changed etc...)
+      }
+      
+      
+      if( $(".overlay").length ){
+        // Implement some kind of js overlay
+        $(".overlay").modal("some-overlay.html")
+        $(".overlay a.close").click(function(){
+          $.modal("close")
+        })
+      }
+      
+      if( $("#special-form").length ){
+        // Custom Validations
+        // AJAX submissions
+        // etc...
+      }
+      
+      // And so on usually ending up in an uncomfortable list of ifs and initializers...
+      
+    })
+
+
+## Solution
+
+A little method which "runs" depending on either the current page (yay, organize by different pages/paths in the same script!) or by CSS selector (similar to above, but if-less).
+
+
 ## Usage
 
     // Run when pathname ends with /slideshow
