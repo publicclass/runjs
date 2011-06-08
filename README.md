@@ -96,17 +96,24 @@ A little method which "runs" depending on either the current page (yay, organize
 
 ## History
 
+### 0.2.0
+
+* [Added] Applies a "run"-attribute to the element so it won't be rerun unless told to (by removing that attribute).
+
+
 ### 0.1.1
 
-* Added the catch-all style.
+* [Added] The catch-all style:
 
         $.run(function(){
           // I'll be called every time!
         })
 
+
 ### 0.1.0
 
 * Initial version.
+
 
 ## TODO
 
