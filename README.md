@@ -96,6 +96,12 @@ A little method which "runs" depending on either the current page (yay, organize
 
 ## History
 
+### 0.2.1
+
+* [Added] `$.run.again()` which should be called anytime a selector has to be run again.
+* [Fixed] If two selector-routes matched an element only the first would be used. Now they're selector specific and shouldn't conflict.
+
+
 ### 0.2.0
 
 * [Added] Applies a "run"-attribute to the element so it won't be rerun unless told to (by removing that attribute).
