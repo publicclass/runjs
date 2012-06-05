@@ -132,6 +132,26 @@ By the big `1.0` we should also have a few extra features like:
 * Maybe return the matched wildcards in the route of a pathname in a params-hash instead
 
 
+## Testing
+
+
+
+## Building
+
+To build you need to install [uglifyjs](https://github.com/mishoo/UglifyJS) which is used for minification. It's simply done using npm: `npm i uglify-js -g`.
+
+Then all you need is to run:
+
+```
+> make
+```
+
+and optionally add a version
+
+```
+> make VERSION=0.4.0-bob
+```
+
 
 ## License 
 
