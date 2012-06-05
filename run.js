@@ -1,5 +1,5 @@
 /*!
- * RunJS 0.3.0
+ * RunJS 0.3.1
  * (c) 2012 Robert Sköld <robert@publicclass.se>
  * MIT Licensed
  */
@@ -196,4 +196,5 @@
 
   // Run on document ready!
   $(function(){ run() })
-})(jQuery)
+
+})(jQuery);
