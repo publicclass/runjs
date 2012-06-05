@@ -96,6 +96,10 @@ A little method which "runs" depending on either the current page (yay, organize
 
 ## History
 
+### 0.3.1
+
+* [Fixed] When running a selector with multiple routes it would ignore all but the first route as it was marked as _run_ already. Fixed by using a run sequence number.
+
 ### 0.3.0
 
 * [Fixed] `$.run.again()` didn't really work as it used a non-referenced variable. Now it has a test to make sure.
