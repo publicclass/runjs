@@ -7,6 +7,8 @@
     section { margin: 0 0 20px; }
     section,
     section a { display: block; }
+    .ok { color: green; }
+    .error { color: red; }
   </style>
 </head> 
  
@@ -37,98 +39,147 @@
   
   <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script> 
   <script src="https://raw.github.com/balupton/history.js/master/scripts/bundled/html5/jquery.history.js"></script> 
-  <script src="../lib/run.js"></script>
+  <script src="../run.js"></script>
   <script>
     // Simple assertion function
     // if only 1 argument it just checks that it's true-ish
     // if 2 arguments it checks if they match
-    // if 3 arguments and the last one is `true` do a deep equal
     function assert(val){
       if( arguments.length == 1 && !val )
         throw new Error("AssertError: "+val);
       if( arguments.length == 2 && val !== arguments[1] )
         throw new Error("AssertError: "+val+" does not equal "+arguments[1]);
+      assert.passed = (assert.passed||0) + 1;
     }
 
-    $.run("/hello/world",function(url){
-      assert(url,"/hello/world")
-    })
-    assert($.run.routes.length,1)
-    assert($.run.routes[0].name,"/hello/world")
-    assert($.run.routes[0].pathname instanceof RegExp)
-    assert($.run.routes[0].pathname.source,/^\/hello\/world\/?$/.source)
+    function test(){
 
-    $.run("/page/:id",function(id,url){
-      assert(id,"123")
-      assert(url,"/page/123")
-    })
-    assert($.run.routes.length,2)
-    assert($.run.routes[1].name,"/page/:id")
-    assert($.run.routes[1].pathname instanceof RegExp)
-    assert($.run.routes[1].pathname.source,/^\/page\/([^\/]+)\/?$/.source)
-    
-    $.run("/*all/slideshow",function(all,url){
-      assert(all,"page/123")
-      assert(url,"/page/123/slideshow")
-    })
-    assert($.run.routes.length,3)
-    assert($.run.routes[2].name,"/*all/slideshow")
-    assert($.run.routes[2].pathname instanceof RegExp)
-    assert($.run.routes[2].pathname.source,/^\/(.+)\/slideshow\/?$/.source)
-    
-    $.run("/*/slideshow(/:id)",function(all,id,url){
-      assert(all,"page/123")
-      if( id ) {
+      $.run("/hello/world",function(url){
+        assert(url,"/hello/world")
+      })
+      assert($.run.routes.length,1)
+      assert($.run.routes[0].name,"/hello/world")
+      assert($.run.routes[0].pathname instanceof RegExp)
+      assert($.run.routes[0].pathname.source,/^\/hello\/world\/?$/.source)
+
+      $.run("/page/:id",function(id,url){
         assert(id,"123")
-        assert(url,"/page/123/slideshow/123")
-      } else {
-        assert(id,undefined)
+        assert(url,"/page/123")
+      })
+      assert($.run.routes.length,2)
+      assert($.run.routes[1].name,"/page/:id")
+      assert($.run.routes[1].pathname instanceof RegExp)
+      assert($.run.routes[1].pathname.source,/^\/page\/([^\/]+)\/?$/.source)
+      
+      $.run("/*all/slideshow",function(all,url){
+        assert(all,"page/123")
         assert(url,"/page/123/slideshow")
-      }
-    })
-    assert($.run.routes.length,4)
-    assert($.run.routes[3].name,"/*/slideshow(/:id)")
-    assert($.run.routes[3].pathname instanceof RegExp)
-    assert($.run.routes[3].pathname.source,/^\/(.+)\/slideshow(?:\/([^\/]+))?\/?$/.source)
+      })
+      assert($.run.routes.length,3)
+      assert($.run.routes[2].name,"/*all/slideshow")
+      assert($.run.routes[2].pathname instanceof RegExp)
+      assert($.run.routes[2].pathname.source,/^\/(.+)\/slideshow\/?$/.source)
+      
+      $.run("/*/slideshow(/:id)",function(all,id,url){
+        assert(all,"page/123")
+        if( id ) {
+          assert(id,"123")
+          assert(url,"/page/123/slideshow/123")
+        } else {
+          assert(id,undefined)
+          assert(url,"/page/123/slideshow")
+        }
+      })
+      assert($.run.routes.length,4)
+      assert($.run.routes[3].name,"/*/slideshow(/:id)")
+      assert($.run.routes[3].pathname instanceof RegExp)
+      assert($.run.routes[3].pathname.source,/^\/(.+)\/slideshow(?:\/([^\/]+))?\/?$/.source)
 
-    $.run({
-      "body": function(){
-        assert(this.length,1)
-        assert(this[0],document.body)
-        var color = '#'+Math.round(Math.random()*0xffffff).toString(16);
-        this.css('backgroundColor',color)
-      },
-      "script": function(){
-        assert(this.length,4)
-      }
-    })
-    assert($.run.routes.length,6)
-    
+      $.run({
+        "body": function(){
+          assert(this.length,1)
+          assert(this[0],document.body)
+          var color = '#'+Math.round(Math.random()*0xffffff).toString(16);
+          this.css('backgroundColor',color)
+        },
+        "script": function(){
+          assert(this.length,4)
+        }
+      })
+      assert($.run.routes.length,6)
+      
 
-    $.run({})
-    assert($.run.routes.length,6)
-    
-    $.run("/Users/slaskis/Work/Public%20Class/runjs/test/test-run.html",function(url){
-      assert(url,window.location.pathname)
-    })
-    assert($.run.routes.length,7)
-    
-    $.run(function(url){
-      assert(url,window.location.hash.slice(2) || window.location.pathname)
-    })
-    assert($.run.routes[7].name,'^.*$')
-    assert($.run.routes[7].pathname instanceof RegExp)
-    assert($.run.routes.length,8)
-    
-    window.addEventListener("hashchange",function(){
-      $.run()
-    })
+      $.run({})
+      assert($.run.routes.length,6)
+      
+      $.run("/Users/slaskis/Work/Public%20Class/runjs/test/test-run.html",function(url){
+        assert(url,window.location.pathname)
+      })
+      assert($.run.routes.length,7)
+      
+      $.run(function(url){
+        assert(url,window.location.hash.slice(2) || window.location.pathname)
+      })
+      assert($.run.routes[7].name,'^.*$')
+      assert($.run.routes[7].pathname instanceof RegExp)
+      assert($.run.routes.length,8)
 
-    History.Adapter.bind(window,'statechange',function(){
-      console.log('statechange')
-      $.run()
-    })
+      // testing the sequence 
+      var called = 0;
+      $.run('section',function(){called++; assert(this.length,3)})
+      $.run('section',function(){called++; assert(this.length,3)})
+      $.run('section',function(){called++; assert(this.length,3)})
+      $.run('section') // run all 3
+      assert(called,3)
+      $.run('section') // don't run any
+      assert(called,3)
+      $.run.again('section',true) // run all 3 again
+      assert(called,6)
+
+    }
     
+    // auto run on hash/state change
+    window.addEventListener("hashchange",function(){ $.run() })
+    History.Adapter.bind(window,'statechange',function(){ $.run() })
+
+    // benchmark
+    function bench(num){
+      // reset routes for each benchmark
+      $.run.routes.length = 0;
+
+      console.time('adding')
+      var called = 0;
+      for(var i=0;i<num;i++)
+        $.run('body',function(){called++})
+      console.timeEnd('adding')
+
+      console.time('running')
+      assert(called,0)
+      var matched = $.run.again('body',true)
+      assert(called,i)
+      assert(matched,num)
+      console.timeEnd('running')  
+    }
+
+    try {
+      test();
+      document.write('<p class="ok">'+assert.passed+' tests passed!</p>')
+    } catch(e){
+      document.write('<p class="error">Error in test:</p>')
+      document.write('<pre>'+e.stack+'</pre>')
+    }
+
+
+    try {
+      var t = +new Date;
+      for(var i=0; i<10; i++ )
+        bench(100);
+      t = (+new Date)-t;
+      document.write('<p class="ok">Benchmark passed! ('+t+' ms total, '+t/i+' ms avg)</p>')
+    } catch(e){
+      document.write('<p class="error">Error in benchmark:</p>')
+      document.write('<pre>'+e.stack+'</pre>')
+    }
   </script>
 </body> 
 </html>
