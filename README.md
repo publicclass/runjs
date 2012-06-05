@@ -134,7 +134,9 @@ By the big `1.0` we should also have a few extra features like:
 
 ## Testing
 
+Open up [test-run.html](./test/test-run.html) in a browser, click around and see that no exceptions are thrown (probably found in the console).
 
+For the [History.js](https://github.com/balupton/History.js/) tests it needs to be run from a web server to be able to rewrite those urls with `History.pushState`.
 
 ## Building
 
@@ -157,7 +159,7 @@ and optionally add a version
 
 (The MIT License)
 
-Copyright (c) 2011 Robert Sköld &lt;robert@publicclass.se&gt;
+Copyright (c) 2012 Robert Sköld &lt;robert@publicclass.se&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
